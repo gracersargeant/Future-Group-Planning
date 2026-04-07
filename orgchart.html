@@ -694,7 +694,7 @@ function render() {
 
     children.forEach(child => {
       const hasDrilldown = child.children && child.children.length > 0;
-      const isDept = !!child.icon; // departments have icons, people don't
+      const isDept = !!child.icon || hasDrilldown;
 
       html += `<div class="child-item">
         <div class="child-connector"></div>`;
