@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Org Chart | Sargeant Transport</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#0a1e35;--blue:#1e6fb5;--accent:#2589d4;--accent2:#4aaee8;
+  --bg:#eef3f8;--card:#fff;--border:#ccdded;--text:#0d2340;--dim:#7a96b0;
+  --green:#276749;--amber:#d97706;--purple:#553c9a;--radius:8px;
+  --shadow:0 2px 12px rgba(15,42,74,.1);--shadow-lg:0 8px 32px rgba(15,42,74,.18);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;display:flex;flex-direction:column}
+
+/* HEADER */
+header{background:var(--navy);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:200;box-shadow:0 2px 16px rgba(0,0,0,.35)}
+.logo-area{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo-sq{width:38px;height:38px;border-radius:7px;background:linear-gradient(135deg,var(--accent2),var(--accent));display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:15px;color:#fff}
+.logo-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:17px;color:#fff}
+.logo-name span{color:var(--accent2)}
+.back-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:6px 16px;font-size:13px;color:rgba(255,255,255,.7);text-decoration:none;transition:.2s}
+.back-btn:hover{background:rgba(255,255,255,.15);color:#fff}
+
+/* HERO */
+.hero{background:linear-gradient(110deg,#0a1e35,#0f2a4a 40%,#1a4a7a 80%,#1e6fb5);padding:36px 40px 32px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;right:-60px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(74,174,232,.13) 0%,transparent 65%);pointer-events:none}
+.hero-inner{position:relative;z-index:1}
+.bc{display:flex;align-items:center;gap:5px;font-size:12px;color:rgba(255,255,255,.4);margin-bottom:10px}
+.bc a{color:rgba(255,255,255,.4);text-decoration:none}.bc a:hover{color:rgba(255,255,255,.8)}
+.hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:#fff;letter-spacing:-.4px;margin-bottom:6px}
+.hero p{font-size:13px;color:rgba(255,255,255,.55)}
+
+/* TABS */
+.tab-bar{background:var(--card);border-bottom:1px solid var(--border);padding:0 40px;display:flex;overflow-x:auto;gap:0;flex-shrink:0}
+.tab-bar::-webkit-scrollbar{height:3px}.tab-bar::-webkit-scrollbar-thumb{background:var(--border)}
+.tab-btn{padding:13px 16px;font-size:12.5px;font-weight:600;color:var(--dim);border:none;border-bottom:3px solid transparent;background:none;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;transition:.15s}
+.tab-btn:hover{color:var(--text)}.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* MAIN */
+main{flex:1;padding:32px 40px 60px}
+.panel{display:none}.panel.active{display:block;animation:fadeUp .25s ease}
+.dept-hdr{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.dept-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.dept-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;color:var(--text)}
+.dept-sub{font-size:12px;color:var(--dim);margin-top:2px}
+
+/* CHART WRAPPER */
+.chart-wrap{overflow-x:auto;padding-bottom:20px}
+.chart-svg-wrap{display:inline-block;min-width:100%;position:relative}
+
+/* NODE CARDS — rendered as foreignObject or as HTML positioned divs */
+.node{position:absolute;background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;text-align:center;cursor:pointer;transition:all .18s;box-shadow:var(--shadow)}
+.node:hover{border-color:var(--accent);box-shadow:var(--shadow-lg);transform:translateY(-1px)}
+.node.top{border-color:var(--accent);border-width:2px;background:#e8f4fd}
+.node.dashed{border-style:dashed;border-color:var(--accent2)}
+.node .av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:11px;color:#fff;margin:0 auto 6px}
+.node .nm{font-family:'Plus Jakarta Sans',sans-serif;font-size:11.5px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:3px}
+.node .rl{font-size:10px;color:var(--dim);line-height:1.35}
+.node .nt{font-size:9.5px;color:var(--accent);font-style:italic;margin-top:3px}
+
+/* CONTACT MODAL */
+.overlay{position:fixed;inset:0;background:rgba(10,30,53,.55);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+.overlay.open{display:flex;animation:fadeIn .18s ease}
+.modal{background:var(--card);border-radius:14px;padding:0;width:100%;max-width:400px;box-shadow:var(--shadow-lg);overflow:hidden;animation:slideUp .2s ease}
+.modal-head{background:linear-gradient(110deg,var(--navy),var(--blue));padding:24px;display:flex;align-items:center;gap:16px}
+.modal-av{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:18px;color:#fff;flex-shrink:0;border:3px solid rgba(255,255,255,.25)}
+.modal-nm{font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#fff;margin-bottom:3px}
+.modal-rl{font-size:12.5px;color:rgba(255,255,255,.65)}
+.modal-body{padding:20px 24px 24px}
+.contact-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.contact-row:last-child{border-bottom:none}
+.contact-icon{width:34px;height:34px;border-radius:8px;background:#e8f4fd;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.contact-label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px}
+.contact-val{font-size:13.5px;color:var(--text);font-weight:500}
+.contact-val a{color:var(--accent);text-decoration:none}.contact-val a:hover{text-decoration:underline}
+.modal-close{position:absolute;top:14px;right:16px;background:rgba(255,255,255,.15);border:none;border-radius:50%;width:28px;height:28px;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+.modal-close:hover{background:rgba(255,255,255,.25)}
+.modal-head{position:relative}
+
+/* LEGEND */
+.legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:20px}
+.leg-item{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--dim)}
+.leg-line{width:26px;height:2px}.leg-solid{background:var(--border)}.leg-dash{background:repeating-linear-gradient(to right,var(--accent2) 0,var(--accent2) 4px,transparent 4px,transparent 8px)}
+.leg-box{width:16px;height:16px;border-radius:3px;border:2px solid var(--accent);background:#e8f4fd}
+.leg-dbox{width:16px;height:16px;border-radius:3px;border:2px dashed var(--accent2);background:var(--card)}
+
+/* FOOTER */
+footer{background:var(--navy);border-top:3px solid var(--blue);padding:22px 40px}
+.foot-in{max-width:1360px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:rgba(255,255,255,.28)}
+.foot-in a{color:rgba(255,255,255,.45);text-decoration:none}.foot-in a:hover{color:var(--accent2)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:768px){header,main,footer,.hero,.tab-bar{padding-left:16px;padding-right:16px}}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo-area" href="index.html">
+    <div class="logo-sq">ST</div>
+    <div class="logo-name">Sargeant <span>Transport</span></div>
+  </a>
+  <a class="back-btn" href="index.html">&#8592; Back to Portal</a>
+</header>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="bc"><a href="index.html">Portal</a><span>&#8250;</span><span style="color:rgba(255,255,255,.75)">Org Chart</span></div>
+    <h1>&#127970; Organisation Chart</h1>
+    <p>Click any name to view contact details &mdash; select a department using the tabs below.</p>
+  </div>
+</div>
+
+<div class="tab-bar" id="tabBar"></div>
+<main id="main"></main>
+
+<!-- CONTACT MODAL -->
+<div class="overlay" id="overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-head">
+      <div class="modal-av" id="mav"></div>
+      <div><div class="modal-nm" id="mnm"></div><div class="modal-rl" id="mrl"></div></div>
+      <button class="modal-close" onclick="closeModal()">&#10005;</button>
+    </div>
+    <div class="modal-body" id="mbody"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-in">
+    <span>&#169; 2026 Sargeant Transport. All rights reserved.</span>
+    <a href="index.html">&#8592; Back to Staff Portal</a>
+  </div>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  CONTACT DATA — fill in phone, email, site for each person.
+//  Key = lowercase initials or short unique id matching node def.
+//  Leave as '' if unknown — will show as "Not provided"
+// ═══════════════════════════════════════════════════════════════
+const CONTACTS = {
+  'jamie-sargeant':   {phone:'',email:'',site:'Head Office'},
+  'tim-johannessen':  {phone:'',email:'',site:'Delacombe / Truganina'},
+  'alistair-bubb':    {phone:'',email:'',site:'Head Office'},
+  'wayne-glascott':   {phone:'',email:'',site:''},
+  'sharman-latter':   {phone:'',email:'',site:'Head Office'},
+  'sam-staff':        {phone:'',email:'',site:'Head Office'},
+  'michael-corrigan': {phone:'',email:'',site:'Head Office'},
+  'wayne-lach':       {phone:'',email:'',site:''},
+  'jason-trimble':    {phone:'',email:'',site:'Head Office'},
+  'adam-walker':      {phone:'',email:'',site:'Bathurst'},
+  'jo-sbriglio':      {phone:'',email:'',site:'Echuca'},
+  'chellody-webb':    {phone:'',email:'',site:'Truganina'},
+  'emily-costigan':   {phone:'',email:'',site:'Truganina'},
+  'maddie-wauchope':  {phone:'',email:'',site:'Truganina'},
+  'nicole-seiler':    {phone:'',email:'',site:'Truganina'},
+  'kacy-chan':        {phone:'',email:'',site:'Truganina'},
+  'one-half-group':   {phone:'',email:'',site:''},
+  'ryan-boustead':    {phone:'',email:'',site:'Truganina'},
+  'peter-mccarthy':   {phone:'',email:'',site:'Truganina'},
+  'jordan-hall':      {phone:'',email:'',site:'Truganina'},
+  'dean-balla':       {phone:'',email:'',site:'Truganina'},
+  'phani-jaladi':     {phone:'',email:'',site:'Truganina'},
+  'halina-tavita-alama':{phone:'',email:'',site:'Truganina'},
+  'jaymega-paradero': {phone:'',email:'',site:'Truganina'},
+  'loretta-lavae':    {phone:'',email:'',site:'Truganina'},
+  'jenny-tabone':     {phone:'',email:'',site:'Truganina'},
+  'chyna-pahulu':     {phone:'',email:'',site:'Truganina'},
+  'bindu-thaduri':    {phone:'',email:'',site:'Truganina'},
+  'elena-gjorgievska':{phone:'',email:'',site:'Truganina'},
+  'renea-borninkhof': {phone:'',email:'',site:'Truganina'},
+  'mayank-sodha':     {phone:'',email:'',site:'Truganina'},
+  'ben-quarrel':      {phone:'',email:'',site:'Truganina'},
+  'prakash-patel':    {phone:'',email:'',site:'Truganina'},
+  'jordan-struth':    {phone:'',email:'',site:''},
+  'rheanna-mison':    {phone:'',email:'',site:'Adelaide'},
+  'luke-christensen': {phone:'',email:'',site:'Adelaide'},
+  'gagandeep-singh':  {phone:'',email:'',site:'Truganina'},
+  'matthew-jones':    {phone:'',email:'',site:'Ballarat'},
+  'brady-meade':      {phone:'',email:'',site:'Ballarat'},
+  'samuel-hyland':    {phone:'',email:'',site:'Ballarat'},
+  'chantelle-reid':   {phone:'',email:'',site:'Ballarat'},
+  'naomi-scott':      {phone:'',email:'',site:'Ballarat'},
+  'rick-isaac':       {phone:'',email:'',site:'Ballarat'},
+  'lachlan-cairns':   {phone:'',email:'',site:'Ballarat'},
+  'jeffrey-rabino':   {phone:'',email:'',site:'Ballarat'},
+  'joshua-wyeth':     {phone:'',email:'',site:'Truganina'},
+  'amy-lee-lovett':   {phone:'',email:'',site:'Truganina'},
+  'steven-hunt':      {phone:'',email:'',site:'Truganina'},
+  'chris-avramopoulos':{phone:'',email:'',site:'Truganina'},
+  'brett-schlensog':  {phone:'',email:'',site:'Truganina'},
+  'bodie-buxton-scott':{phone:'',email:'',site:'Truganina'},
+  'joshua-sutton':    {phone:'',email:'',site:'Truganina'},
+  'brian-burke':      {phone:'',email:'',site:'Delacombe'},
+  'robert-hay':       {phone:'',email:'',site:'Delacombe'},
+  'hugh-dixon':       {phone:'',email:'',site:'Delacombe'},
+  'akatama-wina':     {phone:'',email:'',site:'Delacombe'},
+  'joseph-lewis':     {phone:'',email:'',site:'Delacombe'},
+  'shayne-romeril':   {phone:'',email:'',site:'Delacombe / Truganina'},
+  'james-cassar':     {phone:'',email:'',site:'Delacombe'},
+  'mark-geier':       {phone:'',email:'',site:'Delacombe'},
+  'sandra-dickson':   {phone:'',email:'',site:'Delacombe'},
+  'andy-mifsud':      {phone:'',email:'',site:'Truganina'},
+  'vacant-position':  {phone:'',email:'',site:'Truganina'},
+  'robyn-fletcher':   {phone:'',email:'',site:'Truganina'},
+  'greg-forth':       {phone:'',email:'',site:'Truganina'},
+  'davidson-m':       {phone:'',email:'',site:'Truganina'},
+  'jeffrey-p':        {phone:'',email:'',site:'Truganina'},
+  'wilson-s':         {phone:'',email:'',site:'Truganina'},
+  'baron-k':          {phone:'',email:'',site:'Truganina'},
+  'samuel-h':         {phone:'',email:'',site:'Truganina'},
+  'mbili-b':          {phone:'',email:'',site:'Truganina'},
+  'daniel-sexton':    {phone:'',email:'',site:'Truganina'},
+  'daniel-symons':    {phone:'',email:'',site:'Truganina'},
+  'nicole-davis':     {phone:'',email:'',site:''},
+  'brian-rowe':       {phone:'',email:'',site:''},
+  'mark-ivkovic':     {phone:'',email:'',site:'Truganina'},
+  'carl-christensen': {phone:'',email:'',site:'Truganina'},
+  'alicia-petricevich':{phone:'',email:'',site:'Truganina'},
+  'grace-richardson': {phone:'',email:'',site:'Truganina'},
+  'anne-marie-abel':  {phone:'',email:'',site:'Head Office'},
+  'andrea-taylor':    {phone:'',email:'',site:'Head Office'},
+  'tim-atkinson':     {phone:'',email:'',site:'Head Office'},
+  'clair-biggin':     {phone:'',email:'',site:'Head Office'},
+  'marta-rowe':       {phone:'',email:'',site:'Head Office'},
+  'jaydan-power-jenkins':{phone:'',email:'',site:'Head Office'},
+  'optima':           {phone:'',email:'',site:'External'},
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  MODAL
+// ═══════════════════════════════════════════════════════════════
+function ini(n){return n.split(' ').filter(Boolean).map(w=>w[0]).join('').substring(0,2).toUpperCase()}
+
+function openCard(id,name,role,color){
+  const c=CONTACTS[id]||{};
+  document.getElementById('mav').textContent=ini(name);
+  document.getElementById('mav').style.background=color;
+  document.getElementById('mnm').textContent=name;
+  document.getElementById('mrl').textContent=role;
+  const rows=[
+    {icon:'📍',label:'Site / Location',val:c.site||'Not provided'},
+    {icon:'📞',label:'Phone',val:c.phone?`<a href="tel:${c.phone}">${c.phone}</a>`:'Not provided'},
+    {icon:'✉️',label:'Email',val:c.email?`<a href="mailto:${c.email}">${c.email}</a>`:'Not provided'},
+  ];
+  document.getElementById('mbody').innerHTML=rows.map(r=>`
+    <div class="contact-row">
+      <div class="contact-icon">${r.icon}</div>
+      <div><div class="contact-label">${r.label}</div><div class="contact-val">${r.val}</div></div>
+    </div>`).join('');
+  document.getElementById('overlay').classList.add('open');
+}
+
+function closeModal(e){
+  if(!e||e.target===document.getElementById('overlay')||e.currentTarget.classList.contains('modal-close'))
+    document.getElementById('overlay').classList.remove('open');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CHART BUILDER — renders nodes + SVG lines
+//  Each dept defines a tree of nodes with x,y,w,h positions
+//  relative to a canvas, plus edges between them.
+// ═══════════════════════════════════════════════════════════════
+
+// Node dimensions
+const NW=148, NH=72, NW_WIDE=160, NH_TALL=82;
+
+function makeNode(id,name,role,color,x,y,opts={}){
+  return {id,name,role,color,x,y,w:opts.w||NW,h:opts.h||NH,top:!!opts.top,dashed:!!opts.dashed,note:opts.note||''};
+}
+
+function edge(from,to,dashed=false){return{from,to,dashed}}
+
+function renderChart(nodes,edges,canvasW,canvasH){
+  // Build node map
+  const nm={};nodes.forEach(n=>nm[n.id]=n);
+  // SVG lines
+  let lines='';
+  edges.forEach(e=>{
+    const a=nm[e.from],b=nm[e.to];
+    if(!a||!b)return;
+    const ax=a.x+a.w/2, ay=a.y+a.h;
+    const bx=b.x+b.w/2, by=b.y;
+    const my=(ay+by)/2;
+    const stroke=e.dashed?`stroke="#4aaee8" stroke-dasharray="6,4"`:`stroke="#ccdded"`;
+    lines+=`<path d="M${ax},${ay} L${ax},${my} L${bx},${my} L${bx},${by}" fill="none" ${stroke} stroke-width="2"/>`;
+  });
+  // Node divs
+  const divs=nodes.map(n=>{
+    const cls=['node',n.top?'top':'',n.dashed?'dashed':''].filter(Boolean).join(' ');
+    return `<div class="${cls}" style="left:${n.x}px;top:${n.y}px;width:${n.w}px;min-height:${n.h}px"
+      onclick="openCard('${n.id}','${n.name.replace(/'/g,"\\'")}','${n.role.replace(/'/g,"\\'")}','${n.color}')">
+      <div class="av" style="background:${n.color}">${ini(n.name)}</div>
+      <div class="nm">${n.name}</div>
+      <div class="rl">${n.role}</div>
+      ${n.note?`<div class="nt">${n.note}</div>`:''}
+    </div>`;
+  }).join('');
+  return `<div class="chart-svg-wrap" style="position:relative;width:${canvasW}px;height:${canvasH}px">
+    <svg style="position:absolute;top:0;left:0;width:${canvasW}px;height:${canvasH}px;overflow:visible" xmlns="http://www.w3.org/2000/svg">${lines}</svg>
+    ${divs}
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  COLOUR PALETTE
+// ═══════════════════════════════════════════════════════════════
+const CL={
+  navy:'#0f2a4a', blue:'#1e6fb5', mid:'#2589d4', light:'#4aaee8',
+  green:'#276749', amber:'#d97706', purple:'#553c9a', teal:'#0f766e',
+  rose:'#9f1239', slate:'#475569',
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  DEPARTMENTS
+// ═══════════════════════════════════════════════════════════════
+const DEPTS=[
+
+// ── 1. SENIOR LEADERSHIP ──────────────────────────────────────
+{id:'senior-leadership',label:'Senior Leadership',icon:'⭐',iconBg:'#fff3cd',
+render(){
+  const CW=1100, CH=420;
+  const cx=CW/2;
+  // Row 0 - Jamie
+  const r0y=20;
+  // Row 1 - 6 direct reports
+  const r1y=160;
+  const names1=[
+    {id:'tim-johannessen',  name:'Tim Johannessen',  role:'Maintenance/Workshop Manager', color:CL.blue},
+    {id:'alistair-bubb',    name:'Alistair Bubb',     role:'Fleet Asset Manager',          color:CL.blue},
+    {id:'wayne-glascott',   name:'Wayne Glascott',    role:'Asset Finance Consultant',     color:CL.blue},
+    {id:'sharman-latter',   name:'Sharman Latter',    role:'Company Accountant / CFO',     color:CL.blue},
+    {id:'sam-staff',        name:'Sam Staff',         role:'Chief Operating Officer',      color:CL.green},
+    {id:'michael-corrigan', name:'Michael Corrigan',  role:'HR Consultant',               color:CL.blue},
+    {id:'wayne-lach',       name:'Wayne Lach',        role:'Compliance Consultant',        color:CL.blue},
+  ];
+  const gap=10;
+  const totalW=names1.length*NW+(names1.length-1)*gap;
+  const startX=(CW-totalW)/2;
+  const nodes=[
+    makeNode('jamie-sargeant','Jamie Sargeant','CEO / Director',CL.navy,cx-NW/2,r0y,{top:true}),
+    ...names1.map((n,i)=>makeNode(n.id,n.name,n.role,n.color,startX+i*(NW+gap),r1y)),
+    makeNode('jason-trimble','Jason Trimble','Executive Assistant',CL.amber,cx-NW/2,320,{dashed:true,note:'Reports to: Jamie, Sam & Michael'}),
+  ];
+  const edges=[
+    ...names1.map(n=>edge('jamie-sargeant',n.id)),
+    edge('jamie-sargeant','jason-trimble',true),
+    edge('sam-staff','jason-trimble',true),
+    edge('michael-corrigan','jason-trimble',true),
+  ];
+  return renderChart(nodes,edges,CW,CH);
+}},
+
+// ── 2. GROUP OPERATIONS ───────────────────────────────────────
+{id:'group-operations',label:'Group Operations',icon:'🌐',iconBg:'#e0f2fe',
+render(){
+  const CW=1000, CH=480;
+  const cx=CW/2;
+  const nodes=[
+    makeNode('sam-staff','Sam Staff','Chief Operating Officer',CL.navy,cx-NW/2,20,{top:true}),
+    makeNode('adam-walker','Adam Walker','Bathurst Manager',CL.blue,40,160),
+    makeNode('jo-sbriglio','Jo Sbriglio','Echuca Manager',CL.blue,200,160),
+    makeNode('chellody-webb','Chellody Webb','Group Operations Manager',CL.green,360,160),
+    makeNode('emily-costigan','Emily Costigan','Head of Compliance & Driver Training',CL.blue,520,160,{w:168}),
+    makeNode('maddie-wauchope','Maddie Wauchope','Customer Service Manager',CL.blue,700,160),
+    makeNode('ryan-boustead','Ryan Boustead','Systems Supervisor',CL.amber,40,320,{dashed:true,note:'Reports to: Sam Staff'}),
+    makeNode('peter-mccarthy','Peter McCarthy','Pallet Control',CL.amber,200,320,{dashed:true,note:'Reports to: Sam Staff'}),
+    makeNode('nicole-seiler','Nicole Seiler','Operations Admin',CL.mid,700,290),
+    makeNode('kacy-chan','Kacy Chan','Bookings Support',CL.light,700,370),
+    makeNode('one-half-group','One Half Group','',CL.slate,700,450),
+  ];
+  const edges=[
+    edge('sam-staff','adam-walker'),edge('sam-staff','jo-sbriglio'),
+    edge('sam-staff','chellody-webb'),edge('sam-staff','emily-costigan'),
+    edge('sam-staff','maddie-wauchope'),
+    edge('sam-staff','ryan-boustead',true),edge('sam-staff','peter-mccarthy',true),
+    edge('maddie-wauchope','nicole-seiler'),
+    edge('nicole-seiler','kacy-chan'),edge('kacy-chan','one-half-group'),
+  ];
+  return renderChart(nodes,edges,CW,CH+80);
+}},
+
+// ── 3. OPERATIONS ─────────────────────────────────────────────
+{id:'operations',label:'Operations',icon:'🚛',iconBg:'#dbeafe',
+render(){
+  const CW=1600, CH=920;
+  const nodes=[
+    makeNode('chellody-webb','Chellody Webb','Group Operations Manager',CL.navy,700,20,{top:true}),
+    // L2
+    makeNode('jordan-hall','Jordan Hall','Operations Manager – Metro & Northern Vic',CL.green,340,130,{w:160}),
+    makeNode('matthew-jones','Matthew Jones','Regional West Ops Manager',CL.blue,900,130,{w:158}),
+    makeNode('jordan-struth','Jordan Struth','Linehaul Operations Supervisor',CL.amber,1120,130,{dashed:true,note:'Reports to: Chellody'}),
+    makeNode('gagandeep-singh','Gagandeep Singh','Weekend Operations Supervisor',CL.amber,1290,130,{dashed:true,note:'Reports to: Chellody'}),
+    // Under Jordan Hall
+    makeNode('dean-balla','Dean Balla','Operations Supervisor – All Rounder',CL.mid,20,280),
+    makeNode('phani-jaladi','Phani Jaladi','Operations Supervisor',CL.mid,178,280),
+    makeNode('halina-tavita-alama','Halina Tavita Alama','Operations Supervisor',CL.mid,336,280,{w:156}),
+    makeNode('jaymega-paradero','Jaymega Paradero','Operations Admin Supervisor (Truganina)',CL.mid,502,280,{w:162,h:82}),
+    // Under Halina
+    makeNode('mayank-sodha','Mayank Sodha','Operations Supervisor',CL.light,336,400),
+    makeNode('ben-quarrel','Ben Quarrel','Operations Supervisor',CL.light,336,480),
+    makeNode('prakash-patel','Prakash Patel','PM Operations Supervisor',CL.light,336,560),
+    // Under Jaymega (admin chain)
+    makeNode('loretta-lavae','Loretta Lavae','Operations Admin',CL.light,502,400),
+    makeNode('jenny-tabone','Jenny Tabone','Operations Admin',CL.light,502,475),
+    makeNode('chyna-pahulu','Chyna Pahulu','Operations Admin',CL.light,502,550),
+    makeNode('bindu-thaduri','Bindu Thaduri','Operations Admin',CL.light,502,625),
+    makeNode('elena-gjorgievska','Elena Gjorgievska','Operations Admin – All Rounder',CL.light,502,700),
+    makeNode('renea-borninkhof','Renea Borninkhof','Operations Admin',CL.light,502,775),
+    // Under Matthew Jones
+    makeNode('brady-meade','Brady Meade','Operations Supervisor',CL.mid,900,280),
+    makeNode('samuel-hyland','Samuel Hyland','Operations Supervisor',CL.mid,900,360),
+    makeNode('chantelle-reid','Chantelle Reid','Operations Admin Supervisor',CL.mid,900,440),
+    makeNode('naomi-scott','Naomi Scott','Operations Admin',CL.mid,900,520),
+    makeNode('rick-isaac','Rick Isaac','Ballarat Yard Hand',CL.light,900,600),
+    makeNode('lachlan-cairns','Lachlan Cairns','Ballarat Yard Hand',CL.light,900,675),
+    makeNode('jeffrey-rabino','Jeffrey Rabino','Operations Admin',CL.light,900,750),
+    // Under Jordan Struth
+    makeNode('rheanna-mison','Rheanna Mison','Adelaide Operations Supervisor',CL.mid,1120,280),
+    makeNode('luke-christensen','Luke Christensen','Hybrid Yard Hand',CL.light,1120,360),
+  ];
+  const edges=[
+    edge('chellody-webb','jordan-hall'),edge('chellody-webb','matthew-jones'),
+    edge('chellody-webb','jordan-struth',true),edge('chellody-webb','gagandeep-singh',true),
+    edge('jordan-hall','dean-balla'),edge('jordan-hall','phani-jaladi'),
+    edge('jordan-hall','halina-tavita-alama'),edge('jordan-hall','jaymega-paradero'),
+    edge('halina-tavita-alama','mayank-sodha'),edge('mayank-sodha','ben-quarrel'),edge('ben-quarrel','prakash-patel'),
+    edge('jaymega-paradero','loretta-lavae'),edge('loretta-lavae','jenny-tabone'),
+    edge('jenny-tabone','chyna-pahulu'),edge('chyna-pahulu','bindu-thaduri'),
+    edge('bindu-thaduri','elena-gjorgievska'),edge('elena-gjorgievska','renea-borninkhof'),
+    edge('matthew-jones','brady-meade'),edge('brady-meade','samuel-hyland'),
+    edge('samuel-hyland','chantelle-reid'),edge('chantelle-reid','naomi-scott'),
+    edge('naomi-scott','rick-isaac'),edge('rick-isaac','lachlan-cairns'),edge('lachlan-cairns','jeffrey-rabino'),
+    edge('jordan-struth','rheanna-mison',true),edge('rheanna-mison','luke-christensen'),
+  ];
+  return renderChart(nodes,edges,CW,CH);
+}},
+
+// ── 4. TRUGANINA WAREHOUSE ────────────────────────────────────
+{id:'truganina-warehouse',label:'Truganina Warehouse',icon:'🏭',iconBg:'#fef9c3',
+render(){
+  const CW=700, CH=560;
+  const nodes=[
+    makeNode('jordan-hall','Jordan Hall','Operations Manager – Metro & Northern Victoria',CL.navy,260,20,{top:true,w:180}),
+    makeNode('joshua-wyeth','Joshua Wyeth','PM Leading Hand',CL.blue,40,150),
+    makeNode('steven-hunt','Steven Hunt','Forklift Operator',CL.mid,220,150),
+    makeNode('amy-lee-lovett','Amy-Lee Lovett','Cross Dock Admin',CL.blue,400,150),
+    makeNode('chris-avramopoulos','Chris Avramopoulos','Forklift Operator',CL.light,220,250),
+    makeNode('brett-schlensog','Brett Schlensog','Forklift Operator',CL.light,220,330),
+    makeNode('bodie-buxton-scott','Bodie Buxton Scott','Forklift Operator',CL.light,220,410),
+    makeNode('joshua-sutton','Joshua Sutton','Forklift Operator',CL.light,220,490),
+  ];
+  const edges=[
+    edge('jordan-hall','joshua-wyeth'),edge('jordan-hall','steven-hunt'),edge('jordan-hall','amy-lee-lovett'),
+    edge('steven-hunt','chris-avramopoulos'),edge('chris-avramopoulos','brett-schlensog'),
+    edge('brett-schlensog','bodie-buxton-scott'),edge('bodie-buxton-scott','joshua-sutton'),
+  ];
+  return renderChart(nodes,edges,CW,CH);
+}},
+
+// ── 5. WORKSHOP ───────────────────────────────────────────────
+{id:'workshop',label:'Workshop – Delacombe & Truganina',icon:'🔧',iconBg:'#dcfce7',
+render(){
+  const CW=1200, CH=860;
+  // Tim at top centre
+  // Shayne mid-left, Brian Burke mid-right (same row as Shayne)
+  // Under Shayne: JC, AM, VP, GF, RF, DM (row)
+  // Under JC: MG -> SD
+  // Under DM: chain
+  // Under Brian: RH -> HD -> AW -> JL
+  const nodes=[
+    makeNode('tim-johannessen','Tim Johannessen','Maintenance / Workshop Manager',CL.navy,510,20,{top:true}),
+    // Row 2
+    makeNode('shayne-romeril','Shayne Romeril','Assistant Service Manager',CL.blue,220,140,{note:'Line to Tim & own team'}),
+    makeNode('brian-burke','Brian Burke','Ballarat Workshop Supervisor',CL.blue,780,140),
+    // Under Shayne
+    makeNode('james-cassar','James Cassar','Service Advisor – Ballarat',CL.mid,20,290),
+    makeNode('andy-mifsud','Andy Mifsud','Truganina Wash Bay',CL.mid,178,290,{dashed:true,note:'→ Shayne & Tim'}),
+    makeNode('vacant-position','Vacant Position','Truganina Wash Bay',CL.slate,178,380),
+    makeNode('greg-forth','Greg Forth','Leading Hand – Truganina',CL.mid,336,290,{dashed:true,note:'→ Shayne & Tim'}),
+    makeNode('robyn-fletcher','Robyn Fletcher','Service Advisor – Truganina',CL.mid,494,290,{dashed:true,note:'→ Shayne & Tim'}),
+    makeNode('davidson-m','Davidson M','Truganina Mechanic',CL.mid,652,290,{dashed:true,note:'→ Shayne & Tim'}),
+    // Under James
+    makeNode('mark-geier','Mark Geier','Service Advisor – Ballarat',CL.light,20,390),
+    makeNode('sandra-dickson','Sandra Dickson','Service Advisor – Ballarat',CL.light,20,475),
+    // Under Davidson chain
+    makeNode('jeffrey-p','Jeffrey P','Truganina Mechanic',CL.light,652,390),
+    makeNode('wilson-s','Wilson S','Truganina Mechanic',CL.light,652,465),
+    makeNode('baron-k','Baron K','Truganina Mechanic',CL.light,652,540),
+    makeNode('samuel-h','Samuel H','Truganina Mechanic',CL.light,652,615),
+    makeNode('mbili-b','Mbili B','Truganina Mechanic',CL.light,652,690),
+    makeNode('daniel-sexton','Daniel Sexton','Truganina Mechanic',CL.light,652,765),
+    makeNode('daniel-symons','Daniel Symons','Refrigeration Mechanic',CL.teal,652,840),
+    // Under Brian
+    makeNode('robert-hay','Robert Hay','Ballarat Mechanic',CL.light,820,290),
+    makeNode('hugh-dixon','Hugh Dixon','Ballarat Mechanic',CL.light,820,370),
+    makeNode('akatama-wina','Akatama Wina','Ballarat Mechanic',CL.light,820,450),
+    makeNode('joseph-lewis','Joseph Lewis','Ballarat Workshop',CL.light,820,530),
+  ];
+  const edges=[
+    edge('tim-johannessen','shayne-romeril'),
+    edge('tim-johannessen','brian-burke'),
+    edge('shayne-romeril','james-cassar'),
+    edge('shayne-romeril','andy-mifsud'),
+    edge('tim-johannessen','andy-mifsud',true),
+    edge('shayne-romeril','greg-forth'),
+    edge('tim-johannessen','greg-forth',true),
+    edge('shayne-romeril','robyn-fletcher'),
+    edge('tim-johannessen','robyn-fletcher',true),
+    edge('shayne-romeril','davidson-m'),
+    edge('tim-johannessen','davidson-m',true),
+    edge('andy-mifsud','vacant-position'),
+    edge('james-cassar','mark-geier'),edge('mark-geier','sandra-dickson'),
+    edge('davidson-m','jeffrey-p'),edge('jeffrey-p','wilson-s'),edge('wilson-s','baron-k'),
+    edge('baron-k','samuel-h'),edge('samuel-h','mbili-b'),
+    edge('mbili-b','daniel-sexton'),edge('daniel-sexton','daniel-symons'),
+    edge('brian-burke','robert-hay'),edge('robert-hay','hugh-dixon'),
+    edge('hugh-dixon','akatama-wina'),edge('akatama-wina','joseph-lewis'),
+  ];
+  return renderChart(nodes,edges,CW,CH);
+}},
+
+// ── 6. FLEET MANAGEMENT ──────────────────────────────────────
+{id:'fleet-management',label:'Fleet Management',icon:'🚗',iconBg:'#ede9fe',
+render(){
+  const CW=480, CH=220;
+  const nodes=[
+    makeNode('alistair-bubb','Alistair Bubb','Fleet Asset Manager',CL.navy,160,20,{top:true}),
+    makeNode('nicole-davis','Nicole Davis','Asset Administration',CL.blue,60,160),
+    makeNode('brian-rowe','Brian Rowe','PBS Consultant',CL.amber,240,160),
+  ];
+  const edges=[edge('alistair-bubb','nicole-davis'),edge('alistair-bubb','brian-rowe')];
+  return renderChart(nodes,edges,CW,CH);
+}},
+
+// ── 7. COMPLIANCE & DRIVER TRAINING ──────────────────────────
+{id:'compliance',label:'Compliance & Driver Training',icon:'📋',iconBg:'#fce7f3',
+render(){
+  const CW=800, CH=220;
+  const nodes=[
+    makeNode('emily-costigan','Emily Costigan','Head of Compliance & Driver Training',CL.navy,300,20,{top:true,w:200}),
+    makeNode('mark-ivkovic','Mark Ivkovic','Driver Trainer',CL.blue,20,160),
+    makeNode('carl-christensen','Carl Christensen','Driver Trainer',CL.blue,178,160),
+    makeNode('alicia-petricevich','Alicia Petricevich','Driver Training Administration',CL.blue,336,160,{w:162}),
+    makeNode('grace-richardson','Grace Richardson','Compliance Coordinator',CL.blue,508,160),
+  ];
+  const edges=names1=>[
+    edge('emily-costigan','mark-ivkovic'),edge('emily-costigan','carl-christensen'),
+    edge('emily-costigan','alicia-petricevich'),edge('emily-costigan','grace-richardson'),
+  ];
+  return renderChart(nodes,edges(nodes),CW,CH);
+}},
+
+// ── 8. FINANCE ────────────────────────────────────────────────
+{id:'finance',label:'Finance',icon:'💰',iconBg:'#d1fae5',
+render(){
+  const CW=700, CH=380;
+  const nodes=[
+    makeNode('sharman-latter','Sharman Latter','Company Accountant / CFO',CL.navy,270,20,{top:true}),
+    makeNode('anne-marie-abel','Anne Marie Abel','Financial & IT Manager',CL.green,270,140),
+    makeNode('andrea-taylor','Andrea Taylor','AR Admin Support',CL.mid,20,280),
+    makeNode('tim-atkinson','Tim Atkinson','Accounts Receivable',CL.mid,178,280),
+    makeNode('clair-biggin','Clair Biggin','Accounts Payable',CL.mid,336,280),
+    makeNode('marta-rowe','Marta Rowe','Payroll Supervisor',CL.mid,494,280),
+    makeNode('jaydan-power-jenkins','Jaydan Power-Jenkins','Payroll Officer',CL.light,494,370),
+  ];
+  const edges=[
+    edge('sharman-latter','anne-marie-abel'),
+    edge('anne-marie-abel','andrea-taylor'),edge('anne-marie-abel','tim-atkinson'),
+    edge('anne-marie-abel','clair-biggin'),edge('anne-marie-abel','marta-rowe'),
+    edge('marta-rowe','jaydan-power-jenkins'),
+  ];
+  return renderChart(nodes,edges,CW,CH+60);
+}},
+
+// ── 9. HUMAN RESOURCES ───────────────────────────────────────
+{id:'human-resources',label:'Human Resources',icon:'👥',iconBg:'#e0e7ff',
+render(){
+  const CW=380, CH=220;
+  const nodes=[
+    makeNode('michael-corrigan','Michael Corrigan','HR Consultant',CL.navy,115,20,{top:true}),
+    makeNode('optima','Optima','Workcover Consultant',CL.amber,115,160),
+  ];
+  const edges=[edge('michael-corrigan','optima')];
+  return renderChart(nodes,edges,CW,CH);
+}},
+
+// ── 10. HACCP TEAM ────────────────────────────────────────────
+{id:'haccp',label:'HACCP Team',icon:'🛡️',iconBg:'#fee2e2',
+render(){
+  const CW=1100, CH=440;
+  const cx=CW/2;
+  const nodes=[
+    makeNode('jamie-sargeant','Jamie Sargeant','Director – Oversees Entire HACCP Team',CL.navy,cx-NW/2,20,{top:true,note:'Deputised by COO'}),
+    makeNode('sam-staff','Sam Staff','COO – All Daily Management of HACCP',CL.green,cx-NW/2,150,{note:'Deputised by Director'}),
+    makeNode('wayne-lach','Wayne Lach','Team Leader – Compliance, Training, Manual & Document Control',CL.mid,20,300,{w:180,h:92,note:'Deputised by COO'}),
+    makeNode('chellody-webb','Chellody Webb','Team Leader – Victorian Operations Manager',CL.mid,215,300,{w:165}),
+    makeNode('jordan-hall','Jordan Hall','Team Leader – Warehouse Ops, Product Controller, Forklift & Handling',CL.mid,392,300,{w:175,h:92,note:'Deputised by COO'}),
+    makeNode('emily-costigan','Emily Costigan','Team Leader – Head of Compliance & Driver Training',CL.mid,582,300,{w:172}),
+    makeNode('joshua-wyeth','Joshua Wyeth','Team Leader – Leading Hand, Forklift, Cleaning & Temp Checks',CL.mid,766,300,{w:172,h:82}),
+  ];
+  const edges=[
+    edge('jamie-sargeant','sam-staff'),
+    edge('sam-staff','wayne-lach'),edge('sam-staff','chellody-webb'),
+    edge('sam-staff','jordan-hall'),edge('sam-staff','emily-costigan'),edge('sam-staff','joshua-wyeth'),
+  ];
+  return renderChart(nodes,edges,CW,CH);
+}},
+
+];
+
+// ═══════════════════════════════════════════════════════════════
+//  BUILD TABS + PANELS
+// ═══════════════════════════════════════════════════════════════
+const tabBar=document.getElementById('tabBar');
+const mainEl=document.getElementById('main');
+
+DEPTS.forEach((dept,i)=>{
+  const btn=document.createElement('button');
+  btn.className='tab-btn'+(i===0?' active':'');
+  btn.innerHTML=dept.icon+' '+dept.label;
+  btn.onclick=()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('p-'+dept.id).classList.add('active');
+  };
+  tabBar.appendChild(btn);
+
+  const panel=document.createElement('div');
+  panel.className='panel'+(i===0?' active':'');
+  panel.id='p-'+dept.id;
+
+  const legend=`<div class="legend">
+    <div class="leg-item"><div class="leg-box"></div> Top / primary node</div>
+    <div class="leg-item"><div class="leg-line leg-solid"></div> Primary reporting line</div>
+    <div class="leg-item"><div class="leg-line leg-dash"></div> Secondary / multi-reporting line</div>
+    <div class="leg-item"><div class="leg-dbox"></div> Secondary reporting node</div>
+    <div class="leg-item" style="color:#888;font-size:11px">&#128432; Click any card to view contact details</div>
+  </div>`;
+
+  panel.innerHTML=`
+    <div class="dept-hdr">
+      <div class="dept-icon" style="background:${dept.iconBg}">${dept.icon}</div>
+      <div><div class="dept-title">${dept.label}</div><div class="dept-sub">Click any card to view contact details</div></div>
+    </div>
+    <div class="chart-wrap">${dept.render()}</div>
+    ${legend}`;
+  mainEl.appendChild(panel);
+});
+</script>
+</body>
+</html>
