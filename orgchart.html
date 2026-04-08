@@ -717,9 +717,8 @@ function render() {
         </div>`;
       } else {
         // Person card
-        html += `<div class="person-card">
-          ${hasDrilldown ? `onclick="drillInto('${child.id}')" style="cursor:pointer"` : ''}>
-          <div class="avatar" style="background:${child.color || '#2589d4'}">${getInitials(child.name || child.role || 'X')}</div>
+        html += `<div class="person-card" onclick="drillInto('${child.id}')" title="Click to explore ${child.name}">
+          <div class="dept-icon" style="background:${child.color || '#2589d4'}">${getInitials(child.name)}</div>
           <div class="person-name">${child.name}</div>
           <div class="person-role">${child.role || ''}</div>
         </div>`;
