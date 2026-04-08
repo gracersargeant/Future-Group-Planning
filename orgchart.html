@@ -567,12 +567,19 @@ const ORG_DATA = {
       icon: '🚛',
       color: '#1e6fb5',
       children: [
-        { id: 'ops-mgr',    name: 'Operations Manager', role: 'Head of Operations',   color: '#1e6fb5', children: [] },
-        { id: 'fleet-mgr',  name: 'Fleet Manager',      role: 'Fleet & Vehicles',     color: '#2589d4', children: [] },
+        { id: 'ops-mgr',    name: 'Operations Manager', role: 'Head of Operations',   color: '#1e6fb5', children: [
+        { id: 'fleet-mgr',  name: 'Fleet Manager',      role: 'Fleet & Vehicles',     color: '#2589d4', children: [
         { id: 'driver-1',   name: 'Driver Coordinator', role: 'Driver Scheduling',    color: '#4aaee8', children: [] },
         { id: 'driver-2',   name: 'Driver',             role: 'Transport Driver',     color: '#4aaee8', children: [] },
         { id: 'driver-3',   name: 'Driver',             role: 'Transport Driver',     color: '#4aaee8', children: [] },
-      ]
+       ]
+      }
+     ]
+   }
+ ]
+}
+
+    
     },
     {
       id: 'maintenance',
