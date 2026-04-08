@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Org Chart | Sargeant Transport</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:#0f2a4a;--navy-dark:#0a1e35;--blue-mid:#1a4a7a;--blue-bright:#1e6fb5;
+      --accent:#2589d4;--accent2:#4aaee8;--accent-pale:#e8f4fd;
+      --bg:#eef3f8;--bg-card:#ffffff;--bg-card2:#f5f9fd;
+      --border:#ccdded;--text-dark:#0d2340;--text-body:#3a5270;--text-dim:#7a96b0;
+      --radius:10px;--shadow:0 2px 10px rgba(15,42,74,0.09);--shadow-md:0 4px 20px rgba(15,42,74,0.13);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text-body);min-height:100vh;display:flex;flex-direction:column}
+    header{background:var(--navy-dark);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:66px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(10,30,53,0.4)}
+    .logo-area{display:flex;align-items:center;gap:13px;text-decoration:none}
+    .logo-placeholder{width:40px;height:40px;border-radius:8px;background:linear-gradient(135deg,#4aaee8,#2589d4);display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:16px;color:white;flex-shrink:0}
+    .company-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:18px;color:#fff}
+    .company-name span{color:#4aaee8}
+    .back-btn{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.13);border-radius:20px;padding:6px 16px;font-size:13px;font-weight:500;color:rgba(255,255,255,0.7);text-decoration:none;transition:all 0.2s}
+    .back-btn:hover{background:rgba(255,255,255,0.14);color:#fff}
+    .hero{background:linear-gradient(110deg,#0a1e35 0%,#0f2a4a 40%,#1a4a7a 80%,#1e6fb5 100%);padding:40px;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;top:-80px;right:-60px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(74,174,232,0.12) 0%,transparent 65%);pointer-events:none}
+    .hero-inner{position:relative;z-index:1}
+    .breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:12px}
+    .breadcrumb a{color:rgba(255,255,255,0.45);text-decoration:none}
+    .breadcrumb a:hover{color:rgba(255,255,255,0.8)}
+    .hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:28px;font-weight:800;color:#fff;letter-spacing:-0.5px;margin-bottom:6px}
+    .hero p{font-size:14px;color:rgba(255,255,255,0.58)}
+    .tab-bar{background:var(--bg-card);border-bottom:1px solid var(--border);padding:0 40px;display:flex;overflow-x:auto;gap:0}
+    .tab-btn{padding:14px 18px;font-size:13px;font-weight:600;color:var(--text-dim);border:none;border-bottom:3px solid transparent;background:none;cursor:pointer;white-space:nowrap;transition:all 0.2s;font-family:'Inter',sans-serif}
+    .tab-btn:hover{color:var(--text-dark)}
+    .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+    main{flex:1;padding:36px 40px 56px;overflow-x:auto}
+    .chart-panel{display:none}
+    .chart-panel.active{display:block;animation:fadeIn 0.25s ease}
+    .dept-title-row{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+    .dept-icon-big{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+    .dept-label{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:var(--text-dark)}
+    .dept-sublabel{font-size:13px;color:var(--text-dim);margin-top:2px}
+    .tree-scroll{overflow-x:auto;padding-bottom:16px}
+    .tree-inner{display:inline-flex;flex-direction:column;align-items:center;min-width:100%;padding:8px 20px}
+    .col{display:flex;flex-direction:column;align-items:center}
+    .row{display:flex;align-items:flex-start;justify-content:center;gap:16px;position:relative}
+    .stem{width:2px;background:var(--border);margin:0 auto}
+    .node-card{background:var(--bg-card);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;text-align:center;width:152px;box-shadow:var(--shadow);transition:box-shadow 0.2s,transform 0.2s;position:relative}
+    .node-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
+    .node-card.top-card{border-color:var(--accent);border-width:2px;background:var(--accent-pale)}
+    .node-card.secondary{border-style:dashed;border-color:var(--accent2)}
+    .node-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:13px;color:white;margin:0 auto 8px}
+    .node-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:var(--text-dark);line-height:1.3;margin-bottom:4px}
+    .node-role{font-size:10.5px;color:var(--text-dim);line-height:1.4}
+    .node-note{font-size:10px;color:var(--accent);font-style:italic;margin-top:4px}
+    .legend{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:16px}
+    .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-dim)}
+    .legend-line{width:28px;height:2px}
+    .legend-line.solid{background:var(--border)}
+    .legend-line.dashed{background:repeating-linear-gradient(to right,#4aaee8 0,#4aaee8 4px,transparent 4px,transparent 8px)}
+    .secondary-box{background:var(--bg-card);border:1.5px dashed var(--accent2);border-radius:var(--radius);padding:14px 16px;text-align:center;width:165px}
+    footer{background:var(--navy-dark);border-top:3px solid #1e6fb5;padding:24px 40px}
+    .footer-inner{max-width:1360px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:rgba(255,255,255,0.28)}
+    .footer-inner a{color:rgba(255,255,255,0.45);text-decoration:none}
+    .footer-inner a:hover{color:#4aaee8}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  </style>
+</head>
+<body>
+<header>
+  <a class="logo-area" href="index.html">
+    <div class="logo-placeholder">ST</div>
+    <div class="company-name">Sargeant <span>Transport</span></div>
+  </a>
+  <a class="back-btn" href="index.html">&#8592; Back to Portal</a>
+</header>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="breadcrumb"><a href="index.html">Portal</a><span style="margin:0 4px">&#8250;</span><span style="color:rgba(255,255,255,0.75)">Org Chart</span></div>
+    <h1>&#127970; Organisation Chart</h1>
+    <p>Select a department tab to view its structure. Dashed borders indicate secondary reporting lines.</p>
+  </div>
+</div>
+<div class="tab-bar" id="tabBar"></div>
+<main id="main"></main>
+<footer>
+  <div class="footer-inner">
+    <span>&#169; 2026 Sargeant Transport. All rights reserved.</span>
+    <a href="index.html">&#8592; Back to Staff Portal</a>
+  </div>
+</footer>
+<script>
+const C={navy:'#0f2a4a',blue:'#1e6fb5',mid:'#2589d4',light:'#4aaee8',green:'#276749',amber:'#d97706',purple:'#553c9a',teal:'#0f766e',slate:'#475569'};
+function ini(n){return n.split(' ').filter(Boolean).map(w=>w[0]).join('').substring(0,2).toUpperCase()}
+function stem(h=28){return `<div class="stem" style="height:${h}px"></div>`}
+function card(name,role,color,isTop=false,isDashed=false,note=''){
+  return `<div class="node-card${isTop?' top-card':''}${isDashed?' secondary':''}">
+    <div class="node-avatar" style="background:${color}">${ini(name)}</div>
+    <div class="node-name">${name}</div>
+    <div class="node-role">${role}</div>
+    ${note?`<div class="node-note">${note}</div>`:''}
+  </div>`
+}
+function col(...c){return `<div class="col">${c.join('')}</div>`}
+function row(...c){return `<div class="row">${c.join('')}</div>`}
+function secbox(name,role,color,note){
+  return `<div class="secondary-box">
+    <div class="node-avatar" style="background:${color};margin:0 auto 8px;width:38px;height:38px;font-size:13px">${ini(name)}</div>
+    <div class="node-name">${name}</div><div class="node-role">${role}</div>
+    ${note?`<div class="node-note">${note}</div>`:''}
+  </div>`
+}
+
+const DEPTS=[
+{id:'senior-leadership',label:'Senior Leadership',icon:'&#11088;',iconBg:'#fff3cd',render(){
+  return `<div class="tree-inner">
+    ${col(card('Jamie Sargeant','CEO / Director',C.navy,true),stem(),
+      row(
+        col(card('Tim Johannessen','Maintenance &amp; Workshop Manager',C.blue)),
+        col(card('Alistair Bubb','Fleet Asset Manager',C.blue),stem(),
+          row(col(card('Wayne Glascott','Asset Finance Consultant',C.mid)),col(card('Sharman Latter','Company Accountant / CFO',C.mid)))),
+        col(card('Sam Staff','Chief Operating Officer',C.blue)),
+        col(card('Michael Corrigan','HR Consultant',C.blue)),
+        col(card('Wayne Lach','Compliance Consultant',C.blue))
+      )
+    )}
+    <div style="margin-top:32px;display:flex;justify-content:center">
+      ${secbox('Jason Trimble','Executive Assistant',C.mid,'Reports to: Jamie Sargeant, Sam Staff &amp; Michael Corrigan')}
+    </div>
+    <div class="legend"><div class="legend-item"><div class="legend-line solid"></div>Primary reporting</div><div class="legend-item"><div class="legend-line dashed"></div>Secondary / multi reporting</div></div>
+  </div>`
+}},
+
+{id:'group-operations',label:'Group Operations',icon:'&#127758;',iconBg:'#e0f2fe',render(){
+  return `<div class="tree-inner">
+    ${col(card('Sam Staff','Chief Operating Officer',C.navy,true),stem(),
+      row(
+        col(card('Adam Walker','Bathurst Manager',C.blue)),
+        col(card('Jo Sbriglio','Echuca Manager',C.blue)),
+        col(card('Chellody Webb','Group Operations Manager',C.blue)),
+        col(card('Emily Costigan','Head of Compliance &amp; Driver Training',C.blue)),
+        col(card('Maddie Wauchope','Customer Service Manager',C.blue),stem(),
+          col(card('Nicole Seiler','Operations Admin',C.mid),stem(),
+            col(card('Kacy Chan','Bookings Support',C.light),stem(),
+              col(card('One Half Group','',C.light)))))
+      )
+    )}
+    <div style="margin-top:28px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+      ${secbox('Ryan Boustead','Systems Supervisor',C.mid,'Reports to: Sam Staff')}
+      ${secbox('Peter McCarthy','Pallet Control',C.mid,'Reports to: Sam Staff')}
+    </div>
+    <div class="legend"><div class="legend-item"><div class="legend-line dashed"></div>Secondary reporting line</div></div>
+  </div>`
+}},
+
+{id:'operations',label:'Operations',icon:'&#128667;',iconBg:'#dbeafe',render(){
+  return `<div class="tree-inner">
+    ${col(card('Chellody Webb','Group Operations Manager',C.navy,true),stem(),
+      row(
+        col(card('Jordan Hall','Operations Manager – Metro &amp; Northern Victoria',C.blue),stem(),
+          row(
+            col(card('Dean Balla','Operations Supervisor – All Rounder',C.mid)),
+            col(card('Phani Jaladi','Operations Supervisor',C.mid)),
+            col(card('Halina Tavita Alama','Operations Supervisor',C.mid),stem(),
+              col(card('Mayank Sodha','Operations Supervisor',C.light),stem(),
+                col(card('Ben Quarrel','Operations Supervisor',C.light),stem(),
+                  col(card('Prakash Patel','PM Operations Supervisor',C.light))))),
+            col(card('Jaymega Paradero','Operations Admin Supervisor (Truganina)',C.mid),stem(),
+              col(card('Loretta Lavae','Operations Admin',C.light),stem(),
+                col(card('Jenny Tabone','Operations Admin',C.light),stem(),
+                  col(card('Chyna Pahula','Operations Admin',C.light),stem(),
+                    col(card('Bindu Thaduri','Operations Admin',C.light),stem(),
+                      col(card('Elena Gjorgievska','Operations Admin – All Rounder',C.light),stem(),
+                        col(card('Renea Borninkhof','Operations Admin',C.light))))))))
+          )
+        ),
+        col(card('Matthew Jones','Regional West Operations Manager',C.blue),stem(),
+          col(card('Brady Meade','Operations Supervisor',C.mid),stem(),
+            col(card('Samuel Hyland','Operations Supervisor',C.mid),stem(),
+              col(card('Chantelle Reid','Operations Admin Supervisor',C.mid),stem(),
+                col(card('Naomi Scott','Operations Admin',C.light),stem(),
+                  col(card('Rick Isaac','Ballarat Yard Hand',C.light),stem(),
+                    col(card('Lachlan Cairns','Ballarat Yard Hand',C.light),stem(),
+                      col(card('Jeffrey Rabin','Operations Admin',C.light)))))))))
+      )
+    )}
+    <div style="margin-top:28px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+      <div class="secondary-box" style="width:180px">
+        ${secbox('Jordan Struth','Linehaul Operations Supervisor',C.mid,'Reports to: Chellody Webb')}
+        <div style="padding-top:10px;border-top:1px solid var(--border);margin-top:10px">
+          ${col(card('Rheanna Mison','Adelaide Operations Supervisor',C.light),stem(),col(card('Luke Christensen','Hybrid Yard Hand',C.light)))}
+        </div>
+      </div>
+      ${secbox('Gagandeep Singh','Weekend Operations Supervisor',C.mid,'Reports to: Chellody Webb')}
+    </div>
+    <div class="legend"><div class="legend-item"><div class="legend-line dashed"></div>Secondary reporting line</div></div>
+  </div>`
+}},
+
+{id:'truganina-warehouse',label:'Truganina Warehouse',icon:'&#127981;',iconBg:'#fef9c3',render(){
+  return `<div class="tree-inner">
+    ${col(card('Jordan Hall','Operations Manager – Metro &amp; Northern Victoria',C.navy,true),stem(),
+      row(
+        col(card('Joshua Wyeth','PM Leading Hand',C.blue)),
+        col(card('Amy-Lee Lovett','Cross Dock Admin',C.blue)),
+        col(card('Steven Hunt','Forklift Operator',C.blue),stem(),
+          col(card('Chris Avramopoulos','Forklift Operator',C.mid),stem(),
+            col(card('Brett Schlensog','Forklift Operator',C.mid),stem(),
+              col(card('Bodie Buxton Scott','Forklift Operator',C.mid),stem(),
+                col(card('Joshua Sutton','Forklift Operator',C.light))))))
+      )
+    )}
+  </div>`
+}},
+
+{id:'workshop',label:'Workshop – Delacombe &amp; Truganina',icon:'&#128295;',iconBg:'#dcfce7',render(){
+  return `<div class="tree-inner">
+    ${col(card('Tim Johannessen','Maintenance &amp; Workshop Manager',C.navy,true),stem(),
+      col(card('Brian Burke','Ballarat Workshop Supervisor',C.blue),stem(),
+        col(card('Robert Hay','Ballarat Mechanic',C.mid),stem(),
+          col(card('Hugh Dixon','Ballarat Mechanic',C.mid),stem(),
+            col(card('Akatama Wina','Ballarat Mechanic',C.mid),stem(),
+              col(card('Joseph Lewis','Ballarat Workshop',C.light))))))
+    )}
+    <div style="margin-top:28px;padding:18px 20px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);width:100%">
+      <div style="font-size:12px;font-weight:700;color:var(--text-dim);margin-bottom:14px;text-transform:uppercase;letter-spacing:0.5px">Shayne Romeril's Team — also reports to Tim Johannessen</div>
+      ${col(card('Shayne Romeril','Assistant Service Manager',C.blue,false,false,'No direct primary line to Tim'),stem(),
+        row(
+          col(card('James Cassar','Service Advisor Ballarat',C.mid),stem(),
+            col(card('Mark Geier','Service Advisor Ballarat',C.mid),stem(),
+              col(card('Sandra Dickson','Service Advisor Ballarat',C.light)))),
+          col(card('Andy Mifsud','Truganina Wash Bay',C.mid,false,true,'Also reports to Tim')),
+          col(card('Robyn Fletcher','Service Advisor Truganina',C.mid,false,true,'Also reports to Tim')),
+          col(card('Greg Forth','Leading Hand Truganina',C.mid,false,true,'Also reports to Tim')),
+          col(card('Davidson M','Truganina Mechanic',C.mid,false,true,'Also reports to Tim'),stem(),
+            col(card('Jeffrey P','Truganina Mechanic',C.light),stem(),
+              col(card('Wilson S','Truganina Mechanic',C.light),stem(),
+                col(card('Baron K','Truganina Mechanic',C.light),stem(),
+                  col(card('Samuel H','Truganina Mechanic',C.light),stem(),
+                    col(card('Mbili B','Truganina Mechanic',C.light),stem(),
+                      col(card('Daniel Sexton','Truganina Mechanic',C.light),stem(),
+                        col(card('Daniel Symons','Refrigeration Mechanic',C.light)))))))))
+        )
+      )}
+    </div>
+    <div class="legend"><div class="legend-item"><div class="legend-line dashed"></div>Secondary / multi reporting line</div></div>
+  </div>`
+}},
+
+{id:'fleet-management',label:'Fleet Management',icon:'&#128663;',iconBg:'#ede9fe',render(){
+  return `<div class="tree-inner">
+    ${col(card('Alistair Bubb','Fleet Asset Manager',C.navy,true),stem(),
+      col(card('Nicole Davis','Asset Administration',C.blue)))}
+  </div>`
+}},
+
+{id:'compliance',label:'Compliance &amp; Driver Training',icon:'&#128203;',iconBg:'#fce7f3',render(){
+  return `<div class="tree-inner">
+    ${col(card('Emily Costigan','Head of Compliance &amp; Driver Training',C.navy,true),stem(),
+      row(
+        col(card('Mark Ivkovic','Driver Trainer',C.blue)),
+        col(card('Carl Christensen','Driver Trainer',C.blue)),
+        col(card('Alicia Petricevich','Driver Training Administration',C.blue)),
+        col(card('Grace Richardson','Compliance Coordinator',C.blue))
+      )
+    )}
+  </div>`
+}},
+
+{id:'finance',label:'Finance',icon:'&#128176;',iconBg:'#d1fae5',render(){
+  return `<div class="tree-inner">
+    ${col(card('Sharman Latter','Company Accountant / CFO',C.navy,true),stem(),
+      col(card('Anne Marie Abel','Financial &amp; IT Manager',C.blue),stem(),
+        row(
+          col(card('Andrea Taylor','AR Admin Support',C.mid)),
+          col(card('Tim Atkinson','Accounts Receivable',C.mid)),
+          col(card('Clair Biggin','Accounts Payable',C.mid)),
+          col(card('Marta Rowe','Payroll Supervisor',C.mid),stem(),
+            col(card('Jaydan Power-Jenkins','Payroll Officer',C.light)))
+        )
+      )
+    )}
+  </div>`
+}},
+
+{id:'human-resources',label:'Human Resources',icon:'&#128101;',iconBg:'#e0e7ff',render(){
+  return `<div class="tree-inner">
+    ${col(card('Michael Corrigan','HR Consultant',C.navy,true),stem(),
+      col(card('Optima','Work Cover Consultant',C.blue)))}
+  </div>`
+}},
+
+{id:'haccp',label:'HACCP Team',icon:'&#128737;',iconBg:'#fee2e2',render(){
+  return `<div class="tree-inner">
+    ${col(
+      card('Jamie Sargeant','Director – Oversees Entire HACCP Team',C.navy,true,false,'Deputised by Chief Operating Officer'),stem(),
+      col(card('Sam Staff','COO – All Daily Management of HACCP',C.blue,false,false,'Deputised by Director'),stem(),
+        row(
+          col(card('Wayne Lach','Team Leader – Compliance, Training, Manuals &amp; Document Control',C.mid,false,false,'Deputised by COO')),
+          col(card('Chellody Webb','Team Leader – Victorian Operations Manager',C.mid)),
+          col(card('Jordan Hall','Team Leader – Warehouse Ops, Product Controller, Forklift &amp; Product Handling',C.mid,false,false,'Deputised by COO')),
+          col(card('Emily Costigan','Team Leader – Head of Compliance &amp; Driver Training',C.mid)),
+          col(card('Joshua Wyeth','Team Leader – Leading Hand, Forklift, Product Handling, Cleaning &amp; Temp Checks',C.mid))
+        )
+      )
+    )}
+  </div>`
+}},
+];
+
+const tabBar=document.getElementById('tabBar');
+const mainEl=document.getElementById('main');
+DEPTS.forEach((dept,i)=>{
+  const btn=document.createElement('button');
+  btn.className='tab-btn'+(i===0?' active':'');
+  btn.innerHTML=dept.icon+' '+dept.label;
+  btn.onclick=()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.chart-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+dept.id).classList.add('active');
+  };
+  tabBar.appendChild(btn);
+  const panel=document.createElement('div');
+  panel.className='chart-panel'+(i===0?' active':'');
+  panel.id='panel-'+dept.id;
+  panel.innerHTML=`
+    <div class="dept-title-row">
+      <div class="dept-icon-big" style="background:${dept.iconBg}">${dept.icon}</div>
+      <div><div class="dept-label">${dept.label}</div><div class="dept-sublabel">Click the tabs above to switch departments</div></div>
+    </div>
+    <div class="tree-scroll">${dept.render()}</div>`;
+  mainEl.appendChild(panel);
+});
+</script>
+</body>
+</html>
