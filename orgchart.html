@@ -629,13 +629,12 @@ const ORG_DATA = {
 let currentPath = []; // stack of node objects
 
 function getInitials(name) {
-  if (!name || typeof name !== 'string') return 'NA';
+  if (!name) return '';
 
-  return name
+  return String(name)
     .trim()
-    .split(' ')
-    .filter(Boolean)
-    .map(w => w[0])
+    .split(/\s+/)
+    .map(word => word.charAt(0))
     .join('')
     .substring(0, 2)
     .toUpperCase();
@@ -703,7 +702,7 @@ function render() {
 
     children.forEach(child => {
       const hasDrilldown = child.children && child.children.length > 0;
-      const isDept = !!child.icon || hasDrilldown;
+      const isDept = !!child.icon;
 
       html += `<div class="child-item">
         <div class="child-connector"></div>`;
@@ -719,7 +718,8 @@ function render() {
       } else {
         // Person card
         html += `<div class="person-card">
-          <div class="avatar" style="background:${child.color || '#2589d4'}">${getInitials(child.name || child.role)}</div>
+          ${hasDrilldown ? `onclick="drillInto('${child.id}')" style="cursor:pointer"` : ''}>
+          <div class="avatar" style="background:${child.color || '#2589d4'}">${getInitials(child.name || child.role || 'X')}</div>
           <div class="person-name">${child.name}</div>
           <div class="person-role">${child.role || ''}</div>
         </div>`;
