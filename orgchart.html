@@ -88,7 +88,7 @@ footer{background:var(--navy);border-top:3px solid var(--blue);padding:22px 40px
   <div class="hero-inner">
     <div class="bc"><a href="index.html"> Staff Portal</a><span>&#8250;</span><span style="color:rgba(255,255,255,.75)">Organisation Chart</span></div>
     <h1>&#127970; Organisation Chart</h1>
-    <p>Use the tabs to switch departments.</p>
+    <p>Use the tabs to switch departments</p>
   </div>
 </div>
 <div class="tab-bar" id="tabBar"></div>
@@ -114,7 +114,7 @@ const CONTACTS={
   'wayne-lach':        {phone:'',email:'',site:''},
   'jason-trimble':     {phone:'',email:'',site:'Head Office'},
   'adam-walker':       {phone:'',email:'',site:'Bathurst'},
-  'jo-sbriglio':       {phone:'',email:'',site:'Echuca'},
+  'joe-sbriglio':       {phone:'',email:'',site:'Echuca'},
   'chellody-webb':     {phone:'',email:'',site:'Truganina'},
   'emily-costigan':    {phone:'',email:'',site:'Truganina'},
   'maddie-wauchope':   {phone:'',email:'',site:'Truganina'},
@@ -350,7 +350,7 @@ render(){
 render(){
   const tree=n('sam-staff','Sam Staff','Chief Operating Officer',C.navy,{top:true},[
     n('adam-walker','Adam Walker','Bathurst Manager',C.blue),
-    n('jo-sbriglio','Jo Sbriglio','Echuca Manager',C.blue),
+    n('joe-sbriglio','Joe Sbriglio','Echuca Manager',C.blue),
     n('chellody-webb','Chellody Webb','Group Operations Manager',C.green),
     n('emily-costigan','Emily Costigan','Head of Compliance & Driver Training',C.blue),
     n('maddie-wauchope','Maddie Wauchope','Customer Service Manager',C.blue,{},[
@@ -360,8 +360,8 @@ render(){
         ]),
       ]),
     ]),
-    n('ryan-boustead','Ryan Boustead','Systems Supervisor',C.amber,{sec:true,note:'→ Reports to Sam Staff'}),
-    n('peter-mccarthy','Peter McCarthy','Pallet Control',C.amber,{sec:true,note:'→ Reports to Sam Staff'}),
+    n('ryan-boustead','Ryan Boustead','Systems Supervisor',C.amber),
+    n('peter-mccarthy','Peter McCarthy','Pallet Control',C.amber),
   ]);
   return renderLayout(tree);
 }},
@@ -408,12 +408,12 @@ render(){
         ]),
       ]),
     ]),
-    n('jordan-struth','Jordan Struth','Linehaul Operations Supervisor',C.amber,{sec:true,note:'→ Chellody Webb'},[
+    n('jordan-struth','Jordan Struth','Linehaul Operations Supervisor',C.amber,{sec:true,note:'→ Reports to Chellody Webb'},[
       n('rheanna-mison','Rheanna Mison','Adelaide Operations Supervisor',C.mid,{},[
         n('luke-christensen','Luke Christensen','Hybrid Yard Hand',C.light),
       ]),
     ]),
-    n('gagandeep-singh','Gagandeep Singh','Weekend Operations Supervisor',C.amber,{sec:true,note:'→ Chellody Webb'}),
+    n('gagandeep-singh','Gagandeep Singh','Weekend Operations Supervisor',C.amber,{sec:true,note:'→ Reports to Chellody Webb'}),
   ]);
   return renderLayout(tree);
 }},
@@ -447,12 +447,12 @@ render(){
           n('sandra-dickson','Sandra Dickson','Service Advisor – Ballarat',C.light),
         ]),
       ]),
-      n('andy-mifsud','Andy Mifsud','Truganina Wash Bay',C.mid,{sec:true,note:'Also → Tim'},[
+      n('andy-mifsud','Andy Mifsud','Truganina Wash Bay',C.mid,[
         n('vacant-position','Vacant Position','Truganina Wash Bay',C.slate),
       ]),
-      n('robyn-fletcher','Robyn Fletcher','Service Advisor – Truganina',C.mid,{sec:true,note:'Also → Tim'}),
-      n('greg-forth','Greg Forth','Leading Hand – Truganina',C.mid,{sec:true,note:'Also → Tim'}),
-      n('davidson-m','Davidson M','Truganina Mechanic',C.mid,{sec:true,note:'Also → Tim'},[
+      n('robyn-fletcher','Robyn Fletcher','Service Advisor – Truganina',C.mid),
+      n('greg-forth','Greg Forth','Leading Hand – Truganina',C.mid),
+      n('davidson-m','Davidson M','Truganina Mechanic',C.mid,[
         n('jeffrey-p','Jeffrey P','Truganina Mechanic',C.light,{},[
           n('wilson-s','Wilson S','Truganina Mechanic',C.light,{},[
             n('baron-k','Baron K','Truganina Mechanic',C.light,{},[
