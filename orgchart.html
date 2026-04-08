@@ -629,7 +629,16 @@ const ORG_DATA = {
 let currentPath = []; // stack of node objects
 
 function getInitials(name) {
-  return name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+  if (!name || typeof name !== 'string') return 'NA';
+
+  return name
+    .trim()
+    .split(' ')
+    .filter(Boolean)
+    .map(w => w[0])
+    .join('')
+    .substring(0, 2)
+    .toUpperCase();
 }
 
 function findNode(id, node) {
@@ -710,7 +719,7 @@ function render() {
       } else {
         // Person card
         html += `<div class="person-card">
-          <div class="avatar" style="background:${child.color || '#2589d4'}">${getInitials(child.name)}</div>
+          <div class="avatar" style="background:${child.color || '#2589d4'}">${getInitials(child.name || child.role)}</div>
           <div class="person-name">${child.name}</div>
           <div class="person-role">${child.role || ''}</div>
         </div>`;
