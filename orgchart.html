@@ -327,10 +327,9 @@ const DEPTS=[
 render(){
   const tree=n('jamie-sargeant','Jamie Sargeant','CEO / Director',C.navy,{top:true},[
     n('tim-johannessen','Tim Johannessen','Maintenance / Workshop Manager',C.blue),
-    n('alistair-bubb','Alistair Bubb','Fleet Asset Manager',C.blue,{},[
-      n('wayne-glascott','Wayne Glascott','Asset Finance Consultant',C.mid),
-      n('sharman-latter','Sharman Latter','Company Accountant / CFO',C.mid),
-    ]),
+    n('alistair-bubb','Alistair Bubb','Fleet Asset Manager',C.blue),
+    n('wayne-glascott','Wayne Glascott','Asset Finance Consultant',C.blue),
+    n('sharman-latter','Sharman Latter','Company Accountant / CFO',C.blue),
     n('sam-staff','Sam Staff','Chief Operating Officer',C.green),
     n('michael-corrigan','Michael Corrigan','HR Consultant',C.blue),
     n('wayne-lach','Wayne Lach','Compliance Consultant',C.blue),
@@ -360,8 +359,8 @@ render(){
         ]),
       ]),
     ]),
-    n('ryan-boustead','Ryan Boustead','Systems Supervisor',C.amber,{sec:true,note:'→ Sam Staff'}),
-    n('peter-mccarthy','Peter McCarthy','Pallet Control',C.amber,{sec:true,note:'→ Sam Staff'}),
+    n('ryan-boustead','Ryan Boustead','Systems Supervisor',C.amber,{sec:true,note:'→ Reports to Sam Staff'}),
+    n('peter-mccarthy','Peter McCarthy','Pallet Control',C.amber,{sec:true,note:'→ Reports to Sam Staff'}),
   ]);
   return renderLayout(tree);
 }},
