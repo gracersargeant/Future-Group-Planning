@@ -327,7 +327,7 @@ function renderLayout(root,extraEdges=[],minCx=600,startY=20){
 // -- COLOUR PALETTE -------------------------------------------
 const C={
   navy:'#0f2a4a',blue:'#1e6fb5',mid:'#2589d4',light:'#4aaee8',yellow:'#eab308',
-  green:'#276749',amber:'#d97706',purple:'#553c9a',teal:'#0f766e',slate:'#475569',
+  green:'#276749',amber:'#d97706',purple:'#553c9a',teal:'#06b6d4',slate:'#475569',
 };
 
 // -- HELPER: build node ---------------------------------------
@@ -574,11 +574,11 @@ render(){
 {id:'haccp',label:'HACCP Team',icon:'🛡️',iconBg:'#fee2e2',
 render(){
   const nodes=[
-    {...n('jamie-sargeant','Jamie Sargeant','Director – Oversees Entire HACCP Team',C.navy,{top:true,note:'Deputised by COO'}),_x:404,_y:20},
-    {...n('sam-staff','Sam Staff','COO – All Daily Management of HACCP',C.blue,{note:'Deputised by Director'}),_x:404,_y:152},
-    {...n('wayne-lach','Wayne Lach','Team Leader – Compliance, Training & Document Control',C.green,{note:'Deputised by COO'}),_x:64,_y:364},
+    {...n('jamie-sargeant','Jamie Sargeant','Director – Oversees Entire HACCP Team',C.navy,{top:true}),_x:404,_y:20},
+    {...n('sam-staff','Sam Staff','COO – All Daily Management of HACCP',C.blue),_x:404,_y:152},
+    {...n('wayne-lach','Wayne Lach','Team Leader – Compliance, Training & Document Control',C.green),_x:64,_y:364},
     {...n('chellody-webb','Chellody Webb','Team Leader – Victorian Operations Manager',C.green),_x:234,_y:364},
-    {...n('jordan-hall','Jordan Hall','Team Leader – Warehouse Ops, Product Controller & Forklift Handling',C.green,{note:'Deputised by COO'}),_x:404,_y:364},
+    {...n('jordan-hall','Jordan Hall','Team Leader – Warehouse Ops, Product Controller & Forklift Handling',C.green),_x:404,_y:364},
     {...n('emily-costigan','Emily Costigan','Team Leader – Head of Compliance & Driver Training',C.green),_x:574,_y:364},
     {...n('joshua-wyeth','Joshua Wyeth','Team Leader – Leading Hand, Forklift, Cleaning & Temp Checks',C.green),_x:744,_y:364},
   ];
