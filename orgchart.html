@@ -337,17 +337,17 @@ const DEPTS=[
 {id:'senior-leadership',label:'Senior Leadership',icon:'⭐',iconBg:'#fff3cd',
 render(){
   const tree=n('jamie-sargeant','Jamie Sargeant','CEO / Director',C.navy,{top:true},[
-    n('tim-johannessen','Tim Johannessen','Maintenance / Workshop Manager',C.blue),
-    n('alistair-bubb','Alistair Bubb','Fleet Asset Manager',C.blue),
-    n('wayne-glascott','Wayne Glascott','Asset Finance Consultant',C.blue),
-    n('sharman-latter','Sharman Latter','Company Accountant / CFO',C.blue),
-    n('wayne-lach','Wayne Lach','Compliance Consultant',C.blue),
+    n('tim-johannessen','Tim Johannessen','Maintenance / Workshop Manager',C.green),
+    n('alistair-bubb','Alistair Bubb','Fleet Asset Manager',C.green),
+    n('wayne-glascott','Wayne Glascott','Asset Finance Consultant',C.amber),
+    n('sharman-latter','Sharman Latter','Company Accountant / CFO',C.amber),
+    n('wayne-lach','Wayne Lach','Compliance Consultant',C.amber),
     n('sam-staff','Sam Staff','Chief Operating Officer',C.green),
-    n('michael-corrigan','Michael Corrigan','HR Consultant',C.blue),
+    n('michael-corrigan','Michael Corrigan','HR Consultant',C.amber),
   ]);
   // Jason has 3 parents — attach under Jamie, add dashed edges from Sam & Michael
   tree.children.push(
-    n('jason-trimble','Jason Trimble','Executive Assistant',C.amber,{sec:true,note:'Reports to Jamie, Sam & Michael'})
+    n('jason-trimble','Jason Trimble','Executive Assistant',C.purple,{sec:true,note:'Reports to Jamie, Sam & Michael'})
   );
   const extra=[
     {from:'sam-staff',to:'jason-trimble',dashed:true},
