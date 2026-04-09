@@ -251,6 +251,7 @@ function layoutTree(root){
 
   function getEdges(node,out=[]){
     (node.children||[]).forEach(c=>{
+      if(!c.sec){
       out.push({from:node.id,to:c.id,dashed:!!c.sec});
       getEdges(c,out);
     });
@@ -359,9 +360,9 @@ render(){
           n('one-half-group','One Half Group','',C.slate),
         ]),
       ]),
-    ]),
-    n('ryan-boustead','Ryan Boustead','Systems Supervisor',C.amber,{sec:true}),
-    n('peter-mccarthy','Peter McCarthy','Pallet Control',C.amber,{sec:true}),
+      n('ryan-boustead','Ryan Boustead','Systems Supervisor',C.amber,{sec:true}),
+      n('peter-mccarthy','Peter McCarthy','Pallet Control',C.amber,{sec:true}),
+    ]),  
   ]);
   const extra = [
     {from:'sam-staff',to:'ryan-boustead',dashed:true},
