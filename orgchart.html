@@ -254,6 +254,7 @@ function layoutTree(root){
       if(!c.sec){
       out.push({from:node.id,to:c.id,dashed:!!c.sec});
       getEdges(c,out);
+      }
     });
     return out;
   }
