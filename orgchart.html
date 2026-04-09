@@ -247,14 +247,12 @@ function layoutTree(root){
     out.push(node);
     (node.children||[]).forEach(c=>flatten(c,out));
     return out;
-  }
+   }
 
   function getEdges(node,out=[]){
     (node.children||[]).forEach(c=>{
-      if(!c.sec){
-      out.push({from:node.id,to:c.id,dashed:false});
+      out.push({from:node.id,to:c.id,dashed:!!c.sec});
       getEdges(c,out);
-      }
     });
     return out;
   }
@@ -352,25 +350,22 @@ render(){
 render(){
   const tree=n('sam-staff','Sam Staff','Chief Operating Officer',C.navy,{top:true},[
     n('adam-walker','Adam Walker','Bathurst Manager',C.blue),
-    n('joe-sbriglio','Joe Sbriglio','Echuca Manager',C.blue),
+    n('jo-sbriglio','Jo Sbriglio','Echuca Manager',C.blue),
     n('chellody-webb','Chellody Webb','Group Operations Manager',C.green),
     n('emily-costigan','Emily Costigan','Head of Compliance & Driver Training',C.blue),
     n('maddie-wauchope','Maddie Wauchope','Customer Service Manager',C.blue,{},[
       n('nicole-seiler','Nicole Seiler','Operations Admin',C.mid,{},[
-      n('ryan-boustead','Ryan Boustead','Systems Supervisor',C.amber,{sec:true}),
-      n('peter-mccarthy','Peter McCarthy','Pallet Control',C.amber,{sec:true}),
+        n('kacy-chan','Kacy Chan','Bookings Support',C.light,{},[
+          n('one-half-group','One Half Group','',C.slate),
         ]),
       ]),
-       n('kacy-chan','Kacy Chan','Bookings Support',C.light,{},[
-        n('one-half-group','One Half Group','',C.slate),
-    ]),  
+    ]),
+    n('ryan-boustead','Ryan Boustead','Systems Supervisor',C.amber,{sec:true}),
+    n('peter-mccarthy','Peter McCarthy','Pallet Control',C.amber,{sec:true}),
   ]);
-  const extra = [
-    {from:'sam-staff',to:'ryan-boustead',dashed:true},
-    {from:'sam-staff',to:'peter-mccarthy',dashed:true},
-    ];
-  return renderLayout(tree,extra);
+  return renderLayout(tree);
 }},
+
 
 {id:'operations',label:'Operations',icon:'🚛',iconBg:'#dbeafe',
 render(){
