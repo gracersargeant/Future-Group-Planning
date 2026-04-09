@@ -350,7 +350,7 @@ render(){
 render(){
   const tree=n('sam-staff','Sam Staff','Chief Operating Officer',C.navy,{top:true},[
     n('adam-walker','Adam Walker','Bathurst Manager',C.blue),
-    n('jo-sbriglio','Jo Sbriglio','Echuca Manager',C.blue),
+    n('joe-sbriglio','Joe Sbriglio','Echuca Manager',C.blue),
     n('chellody-webb','Chellody Webb','Group Operations Manager',C.green),
     n('emily-costigan','Emily Costigan','Head of Compliance & Driver Training',C.blue),
     n('maddie-wauchope','Maddie Wauchope','Customer Service Manager',C.blue,{},[
@@ -360,13 +360,12 @@ render(){
         ]),
       ]),
     ]),
-    n('spacer-rp','','',C.slate,{style:{display:'none'}},[
-     n('ryan-boustead','Ryan Boustead','Systems Supervisor',C.amber,{sec:true}),
-      n('peter-mccarthy','Peter McCarthy','Pallet Control',C.amber,{sec:true}),
-     ]) 
+    n('ryan-boustead','Ryan Boustead','Systems Supervisor',C.amber,{sec:true,note:'→ Sam Staff'}),
+    n('peter-mccarthy','Peter McCarthy','Pallet Control',C.amber,{sec:true,note:'→ Sam Staff'}),
   ]);
   return renderLayout(tree);
 }},
+
 
 
 {id:'operations',label:'Operations',icon:'🚛',iconBg:'#dbeafe',
