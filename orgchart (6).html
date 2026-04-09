@@ -313,7 +313,7 @@ function renderLayout(root,extraEdges=[]){
 // ── COLOUR PALETTE ───────────────────────────────────────────
 const C={
   navy:'#0f2a4a',blue:'#1e6fb5',mid:'#2589d4',light:'#4aaee8',
-  green:'#276749',amber:'#d97706',purple:'#553c9a',teal:'#0f766e',slate:'#475569',
+  green:'#276749',gmid:'#38a169',amber:'#d97706',purple:'#553c9a',teal:'#0f766e',slate:'#475569',
 };
 
 // ── HELPER: build node ───────────────────────────────────────
@@ -358,21 +358,21 @@ render(){
 {id:'group-operations',label:'Group Operations',icon:'🌐',iconBg:'#e0f2fe',
 render(){
   const tree=n('sam-staff','Sam Staff','Chief Operating Officer',C.navy,{top:true},[
-    n('adam-walker','Adam Walker','Bathurst Manager',C.blue),
-    n('joe-sbriglio','Joe Sbriglio','Echuca Manager',C.blue),
+    n('adam-walker','Adam Walker','Bathurst Manager',C.green),
+    n('joe-sbriglio','Joe Sbriglio','Echuca Manager',C.green),
     n('chellody-webb','Chellody Webb','Group Operations Manager',C.green),
-    n('emily-costigan','Emily Costigan','Head of Compliance & Driver Training',C.blue),
-    n('maddie-wauchope','Maddie Wauchope','Customer Service Manager',C.blue,{},[
-      n('nicole-seiler','Nicole Seiler','Operations Admin',C.mid,{},[
-        n('kacy-chan','Kacy Chan','Bookings Support',C.light,{},[
+    n('emily-costigan','Emily Costigan','Head of Compliance & Driver Training',C.green),
+    n('maddie-wauchope','Maddie Wauchope','Customer Service Manager',C.green,{},[
+      n('nicole-seiler','Nicole Seiler','Operations Admin',C.gmid,{},[
+        n('kacy-chan','Kacy Chan','Bookings Support',C.gmid,{},[
           n('one-half-group','One Half Group','',C.slate),
         ]),
       ]),
     ]),
 
     n('group-ops-alignment','','','transparent',{hidden:true,hideEdgeFromParent:true},[
-      n('ryan-boustead','Ryan Boustead','Systems Supervisor',C.amber,{hideEdgeFromParent:true}),
-      n('peter-mccarthy','Peter McCarthy','Pallet Control',C.amber,{hideEdgeFromParent:true}),
+      n('ryan-boustead','Ryan Boustead','Systems Supervisor',C.blue,{hideEdgeFromParent:true}),
+      n('peter-mccarthy','Peter McCarthy','Pallet Control',C.blue,{hideEdgeFromParent:true}),
     ]),
   ]);
   const extra=[
