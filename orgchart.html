@@ -252,7 +252,7 @@ function layoutTree(root){
   function getEdges(node,out=[]){
     (node.children||[]).forEach(c=>{
       if(!c.sec){
-      out.push({from:node.id,to:c.id,dashed:!!c.sec});
+      out.push({from:node.id,to:c.id,dashed:false});
       getEdges(c,out);
       }
     });
