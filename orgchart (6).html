@@ -440,7 +440,7 @@ render(){
 render(){
   const tree=n('jordan-hall','Jordan Hall','Operations Manager – Metro & Northern Victoria',C.navy,{top:true},[
     n('joshua-wyeth','Joshua Wyeth','PM Leading Hand',C.blue),
-    n('steven-hunt','Steven Hunt','Forklift Operator',C.mid,{},[
+    n('steven-hunt','Steven Hunt','Forklift Operator',C.blue,{},[
       n('chris-avramopoulos','Chris Avramopoulos','Forklift Operator',C.light,{},[
         n('brett-schlensog','Brett Schlensog','Forklift Operator',C.light,{},[
           n('bodie-buxton-scott','Bodie Buxton Scott','Forklift Operator',C.light,{},[
@@ -459,10 +459,10 @@ render(){
   // Tim has two branches: Shayne Romeril and Brian Burke
   // Shayne's team also has secondary lines from Tim
   const tree=n('tim-johannessen','Tim Johannessen','Maintenance / Workshop Manager',C.navy,{top:true},[
-    n('shayne-romeril','Shayne Romeril','Assistant Service Manager',C.blue,{},[
+    n('shayne-romeril','Shayne Romeril','Assistant Service Manager',C.green,{},[
       n('james-cassar','James Cassar','Service Advisor – Ballarat',C.mid,{},[
         n('mark-geier','Mark Geier','Service Advisor – Ballarat',C.mid,{},[
-          n('sandra-dickson','Sandra Dickson','Service Advisor – Ballarat',C.light),
+          n('sandra-dickson','Sandra Dickson','Service Advisor – Ballarat',C.mid),
         ]),
       ]),
       n('andy-mifsud','Andy Mifsud','Truganina Wash Bay',C.mid,[
@@ -471,12 +471,12 @@ render(){
       n('robyn-fletcher','Robyn Fletcher','Service Advisor – Truganina',C.mid),
       n('greg-forth','Greg Forth','Leading Hand – Truganina',C.mid),
       n('davidson-m','Davidson M','Truganina Mechanic',C.mid,[
-        n('jeffrey-p','Jeffrey P','Truganina Mechanic',C.light,{},[
-          n('wilson-s','Wilson S','Truganina Mechanic',C.light,{},[
-            n('baron-k','Baron K','Truganina Mechanic',C.light,{},[
-              n('samuel-h','Samuel H','Truganina Mechanic',C.light,{},[
-                n('mbili-b','Mbili B','Truganina Mechanic',C.light,{},[
-                  n('daniel-sexton','Daniel Sexton','Truganina Mechanic',C.light,{},[
+        n('jeffrey-p','Jeffrey P','Truganina Mechanic',C.mid,{},[
+          n('wilson-s','Wilson S','Truganina Mechanic',C.mid,{},[
+            n('baron-k','Baron K','Truganina Mechanic',C.mid,{},[
+              n('samuel-h','Samuel H','Truganina Mechanic',C.mid,{},[
+                n('mbili-b','Mbili B','Truganina Mechanic',C.mid,{},[
+                  n('daniel-sexton','Daniel Sexton','Truganina Mechanic',C.mid,{},[
                     n('daniel-symons','Daniel Symons','Refrigeration Mechanic',C.teal),
                   ]),
                 ]),
@@ -486,11 +486,11 @@ render(){
         ]),
       ]),
     ]),
-    n('brian-burke','Brian Burke','Ballarat Workshop Supervisor',C.blue,{},[
-      n('robert-hay','Robert Hay','Ballarat Mechanic',C.light,{},[
-        n('hugh-dixon','Hugh Dixon','Ballarat Mechanic',C.light,{},[
-          n('akatama-wina','Akatama Wina','Ballarat Mechanic',C.light,{},[
-            n('joseph-lewis','Joseph Lewis','Ballarat Workshop',C.light),
+    n('brian-burke','Brian Burke','Ballarat Workshop Supervisor',C.green,{},[
+      n('robert-hay','Robert Hay','Ballarat Mechanic',C.mid,{},[
+        n('hugh-dixon','Hugh Dixon','Ballarat Mechanic',C.mid,{},[
+          n('akatama-wina','Akatama Wina','Ballarat Mechanic',C.mid,{},[
+            n('joseph-lewis','Joseph Lewis','Ballarat Workshop',C.mid),
           ]),
         ]),
       ]),
@@ -529,11 +529,11 @@ render(){
 render(){
   const tree=n('sharman-latter','Sharman Latter','Company Accountant / CFO',C.navy,{top:true},[
     n('anne-marie-abel','Anne Marie Abel','Financial & IT Manager',C.green,{},[
-      n('andrea-taylor','Andrea Taylor','AR Admin Support',C.mid),
-      n('tim-atkinson','Tim Atkinson','Accounts Receivable',C.mid),
-      n('clair-biggin','Clair Biggin','Accounts Payable',C.mid),
-      n('marta-rowe','Marta Rowe','Payroll Supervisor',C.mid,{},[
-        n('jaydan-power-jenkins','Jaydan Power-Jenkins','Payroll Officer',C.light),
+      n('andrea-taylor','Andrea Taylor','AR Admin Support',C.blue),
+      n('tim-atkinson','Tim Atkinson','Accounts Receivable',C.blue),
+      n('clair-biggin','Clair Biggin','Accounts Payable',C.blue),
+      n('marta-rowe','Marta Rowe','Payroll Supervisor',C.blue,{},[
+        n('jaydan-power-jenkins','Jaydan Power-Jenkins','Payroll Officer',C.mid),
       ]),
     ]),
   ]);
@@ -543,7 +543,7 @@ render(){
 {id:'human-resources',label:'Human Resources',icon:'👥',iconBg:'#e0e7ff',
 render(){
   const tree=n('michael-corrigan','Michael Corrigan','HR Consultant',C.navy,{top:true},[
-    n('optima','Optima','Workcover Consultant',C.amber),
+    n('optima','Optima','Workcover Consultant',C.slate),
   ]);
   return renderLayout(tree);
 }},
@@ -551,12 +551,12 @@ render(){
 {id:'haccp',label:'HACCP Team',icon:'🛡️',iconBg:'#fee2e2',
 render(){
   const tree=n('jamie-sargeant','Jamie Sargeant','Director – Oversees Entire HACCP Team',C.navy,{top:true,note:'Deputised by COO'},[
-    n('sam-staff','Sam Staff','COO – All Daily Management of HACCP',C.green,{note:'Deputised by Director'},[
-      n('wayne-lach','Wayne Lach','Team Leader – Compliance, Training & Document Control',C.mid,{note:'Deputised by COO'}),
-      n('chellody-webb','Chellody Webb','Team Leader – Victorian Operations Manager',C.mid),
-      n('jordan-hall','Jordan Hall','Team Leader – Warehouse Ops, Product Controller & Forklift Handling',C.mid,{note:'Deputised by COO'}),
-      n('emily-costigan','Emily Costigan','Team Leader – Head of Compliance & Driver Training',C.mid),
-      n('joshua-wyeth','Joshua Wyeth','Team Leader – Leading Hand, Forklift, Cleaning & Temp Checks',C.mid),
+    n('sam-staff','Sam Staff','COO – All Daily Management of HACCP',C.blue,{note:'Deputised by Director'},[
+      n('wayne-lach','Wayne Lach','Team Leader – Compliance, Training & Document Control',C.green,{note:'Deputised by COO'}),
+      n('chellody-webb','Chellody Webb','Team Leader – Victorian Operations Manager',C.green),
+      n('jordan-hall','Jordan Hall','Team Leader – Warehouse Ops, Product Controller & Forklift Handling',C.green,{note:'Deputised by COO'}),
+      n('emily-costigan','Emily Costigan','Team Leader – Head of Compliance & Driver Training',C.green),
+      n('joshua-wyeth','Joshua Wyeth','Team Leader – Leading Hand, Forklift, Cleaning & Temp Checks',C.green),
     ]),
   ]);
   return renderLayout(tree);
